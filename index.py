@@ -1,6 +1,5 @@
 import tkinter as tk
-
-from setuptools import Command;
+from math import sqrt
 
 SMALL_FONT_STYLE = ("Arial", 16)
 LARGE_FONT_STYLE = ("Arial", 40, "bold")
@@ -50,6 +49,8 @@ class PyCalcu:
     def create_special_button(self):
         self.create_clear_button()
         self.create_equal_button()
+        self.create_square_button()
+        self.create_sqrt_button()
 
     def create_display_label(self):
         total_label = tk.Label(self.display_frame, text=self.total_expression, anchor=tk.E, bg=LIGHT_GRAY, fg=LABEL_COLOR, padx=24, font=SMALL_FONT_STYLE)
@@ -84,11 +85,19 @@ class PyCalcu:
     
     def create_clear_button(self):
         clr_button = tk.Button(self.button_frame, text="C", bg=OFF_WHITE, fg=LABEL_COLOR, font=DEFAULT_FONT_STYLE, borderwidth=0, command=lambda: self.clear())
-        clr_button.grid(row=0, column=1, columnspan=3, sticky=tk.NSEW)
+        clr_button.grid(row=0, column=1, sticky=tk.NSEW)
     
     def create_equal_button(self): 
         eql_button = tk.Button(self.button_frame, text="=", bg=LIGHT_BLUE, fg=LABEL_COLOR, font=DEFAULT_FONT_STYLE, borderwidth=0, command=lambda: self.evaluate())
         eql_button.grid(row=4, column=3, columnspan=3, sticky=tk.NSEW)
+
+    def create_square_button(self): 
+        eql_button = tk.Button(self.button_frame, text="x\u00b2", bg=LIGHT_BLUE, fg=LABEL_COLOR, font=DEFAULT_FONT_STYLE, borderwidth=0, command=self.square)
+        eql_button.grid(row=0, column=2, sticky=tk.NSEW)
+    
+    def create_sqrt_button(self): 
+        eql_button = tk.Button(self.button_frame, text="\u221ax", bg=LIGHT_BLUE, fg=LABEL_COLOR, font=DEFAULT_FONT_STYLE, borderwidth=0, command=self.sqrt)
+        eql_button.grid(row=0, column=3, sticky=tk.NSEW)
     
     def add_to_expression(self, value): 
         self.current_expression += str(value)
@@ -116,8 +125,16 @@ class PyCalcu:
     def evaluate(self):
         self.total_expression += self.current_expression
         self.update_total_label()
-        self.current_expression = str(eval(self.total_expression))
+        self.current_expression = str(round(eval(self.total_expression), 7))
         self.total_expression = ""
+        self.update_label()
+    
+    def sqrt(self):
+        self.current_expression = str(round(eval(f'{self.current_expression}**0.5'), 7))
+        self.update_label()
+
+    def square(self): 
+        self.current_expression = str(round(eval(f'{self.current_expression}**2'), 7))
         self.update_label()
 
     def run(self):
